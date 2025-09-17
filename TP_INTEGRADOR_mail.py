@@ -3,24 +3,30 @@ class ServidorCorreo:
         self.usuarios=[]
 
 
-    def listaDeUsuarios():
-        print()
+    def listaDeUsuarios(self):
+        for i in self.usuarios:
+            print(i.nombre) #i la variable que permite reocrrer la funcion, y conecta con self.usuarios[]
 
 
     def CrearUsuarios (self, nombre, dni, mail, contraseña, departamento, rol):
-        print() #placeholder
+        usuario = Usuario (nombre, dni, mail, contraseña, departamento, rol)
+        self.usuarios.append(usuario) #se añade el usuario a la lista, y "usuario" almacena a "Usuario"
+        print(f'se añadio el usuario {usuario} : {nombre} - {mail}') #verificacion de que se añadio al usuario
 
 
-    def ListarEmpleados():
-        print()
+    def ListarEmpleados(self): #se buscan los usuuarios en [], y se extrae su mail, nombre y rol
+        for i in self.usuarios:
+            print (f'{i.nombre} , {i.mail}, {i.rol}') 
 
 
     def EliminarEmpleado(self, contraseña):
-        print()
-
+        for i in self.usuarios:
+            if i._contraseña == i:
+                self.usuarios.remove(i)
+                print (f'usuario {i.usuario} eliminado!') #se compara la contraseña del usuario con la variable i, y se elimina de la lista
 
     def ModificarEmpleado(self, contraseña):
-        print()
+        print() #ni idea :/
        
 class Usuario:
     def __init__ (self, nombre, dni, mail, contraseña, departamento, rol, carpeta):
