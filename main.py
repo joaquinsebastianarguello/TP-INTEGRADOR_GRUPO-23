@@ -1,11 +1,3 @@
-git branch Usuario
-git branch Mensaje
-git branch Carpetas
-git branch ServidorCorreo
-git branch Documentos/
-
-
-
 class ServidorCorreo:
     def __init__(self): #poner usuarios rompia el codigo.
         self._usuarios=[] #Creamos una lista vacía para guardar los usuarios
