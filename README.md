@@ -5,6 +5,8 @@ Estudiantes:
 Joaquín Argüello,
 Melisa Hidalgo
 
+Grupo: 23
+
 Docente de la Cátedra:
 Angel Bianco
 
