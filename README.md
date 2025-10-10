@@ -2,7 +2,7 @@ Trabajo final Integrador para la Cátedra
 Tema: Cliente de Correo Electrónico (Email Client)
 
 Estudiantes: 
-Joaquín Argëllo
+Joaquín Argüello
 Melisa Hidalgo
 
 Docente de la Cátedra:
