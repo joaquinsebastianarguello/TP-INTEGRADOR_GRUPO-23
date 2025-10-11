@@ -45,6 +45,12 @@ class Usuario(InterfazCorreo):                   # Representa a un empleado con 
     def get_rol(self):
         return self.__rol
 
+    def get_enviados(self):
+        return self.__enviados
+
+    def get_inbox(self):
+        return self.__inbox
+
    
     # MÉTODOS SETTERS 
   
