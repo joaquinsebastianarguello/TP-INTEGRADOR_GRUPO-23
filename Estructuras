@@ -1,7 +1,8 @@
 # Pensamos utilizar las listas enlazadas para almacenar mensajes dentro de cada carpeta
 # De la misma manera utilizamos Pila nos serviria como comportamiento para la papelera, estamos en dudas si tambien para deshacer borrados de la papelera
 # La cola nos sirve para ServidorCorreo como un sistema de orden de procesamiento de mensajes ingresados, mediante FIFO(Primero entrado, Primero salido)
-# Estas estructuras estan puestas en esqueleto, falta seguir trabajando aún. 
+# Estas estructuras estan puestas en esqueleto, falta seguir trabajando aún.
+
 
 Class Nodo:                                  # creamos nodo
     def __init__(self, dato):
@@ -63,7 +64,7 @@ class Pila:                                   # Creamos pila con metodo LIFO (ul
             return self.items.pop()
         return None
 
-    def esta_vacia(self):                     #Estará vacia, si sus elementos son nulos
+    def esta_vacia(self):                     # Estará vacia, si sus elementos son nulos
         return len(self.items) == 0
 
     def buscar(self, elemento):               # Busca un elemento dentro de la fila, lo pensamos desde el punto de busqueda de un mensaje en papelera, su existencia o no.
@@ -87,7 +88,7 @@ class Pila:                                   # Creamos pila con metodo LIFO (ul
 
     return encontrado                         # Devuelve encontrado
 
-class Cola:                                   #Creamos cola, con método FIFO (Primero entrado, primero salido)
+class Cola:                                   # Creamos cola, con método FIFO (Primero entrado, primero salido)
     def __init__(self):
         self.items = []
 
@@ -101,3 +102,5 @@ class Cola:                                   #Creamos cola, con método FIFO (P
 
     def esta_vacia(self):                     # estará vacia si sus elementos son nulos
         return len(self.items) == 0           # como la cola organiza las prioridades del Servidor, decidimos no implementar encontrar como sí lo hicimos en pila
+
+
