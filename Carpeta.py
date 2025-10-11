@@ -19,7 +19,7 @@ class Carpeta:                          # carpeta dentro del cliente de correo.
 
     # MÉTODOS 
     def agregar_mensaje(self, mensaje):                      
-        self.__mensajes.agregar(mensaje)
+        self.__mensajes.insertar(mensaje)
         print("Mensaje agregado en la carpeta: " + self.__nombre)
 
     def eliminar_mensaje(self, mensaje):

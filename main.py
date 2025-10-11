@@ -18,6 +18,14 @@ def main():                                    # Crea el servidor y permite inte
     servidor = ServidorCorreo()
     print("Servidor de correo activo")
 
+    admin = Usuario("Admin", "12345678", "admin@mail.com", "1234567890", "Sistemas", "administrador")
+    servidor.registrar_usuario(admin)
+
+    empleado = Usuario("limpiador", "34567890", "empleado@.com", "23456789", "limpieza", "barredor")
+    servidor.registrar_usuario(empleado)
+    
+    usuario_actual = None
+
     usuario_actual = None                      # Guarda al usuario que inicia sesión
     opcion = ""
 
