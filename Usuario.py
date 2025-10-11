@@ -19,22 +19,67 @@ class Usuario(InterfazCorreo):                   # Representa a un empleado con 
         self.__es_primer_login = True                              #la primera vez que ingresa debe cambiar la pass que se le dio por default, por lo tanto se neecsiat saber si es la primera vez que entra o no, para derivar en la accion necesaria
         self.__codigo_validacion = None                            #en caso de recuperacion de contraseña, se le enviara un codigo de validacion por mail o correo
 
-        self.__root = Carpeta("Root")                              # Estructura de correo
-        self.__inbox = Carpeta("Bandeja de Entrada")
-        self.__enviados = Carpeta("Enviados")
+        self.__root = Carpeta("Root")                              # Estructura de correo. Arbol recursivo donde root es el nodo raiz del arbol carpeta, es recursiva porque cada carpeta puede tener otras carpetas dentro
+        self.__inbox = Carpeta("Bandeja de Entrada")               # Es raiz del arbol carpeat, porque el nodo raiz del arbol principal es el mismo servidor de correo
+        self.__enviados = Carpeta("Enviados")                      # Se inicia aca un mini arbol en cada usuario
         self.__root.agregar_subcarpeta(self.__inbox)
         self.__root.agregar_subcarpeta(self.__enviados)
         self.__papelera = Pila()
 
-    # ------------------------------------------------------------
-    # AUTENTICACIÓN Y GESTIÓN DE CONTRASEÑAS
-    # ------------------------------------------------------------
-    def login(self, mail, contraseña):
-        """
-        Verifica el ingreso del usuario.
-        Si es el primer login, fuerza el cambio de contraseña.
-        Si la contraseña no coincide, ofrece recuperación.
-        """
+    # METODOS GETTERS
+    def get_nombre(self):
+        return self.__nombre
+
+    def get_dni(self):
+        return self.__dni
+
+    def get_mail(self):
+        return self.__mail
+
+    def get_telefono(self):
+        return self.__telefono
+
+    def get_departamento(self):
+        return self.__departamento
+
+    def get_rol(self):
+        return self.__rol
+
+   
+    # MÉTODOS SETTERS 
+  
+    def set_mail(self, nuevo_mail):                                # para hacer esto verifico que el mail tenga el @ y el . por el dominio
+        if "@" in nuevo_mail and "." in nuevo_mail:
+            self.__mail = nuevo_mail
+            print("Correo actualizado correctamente.")
+        else:
+            print("Formato de correo inválido.")
+
+    def set_contraseña(self, nueva_contraseña):                    # como al principio establecimos una contraseña de 4 digitos, mantenemos esa decisión en al recuepracion, aunque este límite nonera necesario
+        if len(nueva_contraseña) >= 4:
+            self.__contraseña = nueva_contraseña
+            print("Contraseña modificada correctamente.")
+        else:
+            print("La contraseña debe tener al menos 4 caracteres.")   # si no cumple la cant de caracteres tira error. Tambien se podria limitar el tipo de valor que recibe, o trasnformarla en minuscula para que no importe si estuviera escrita en mayuscula o minuscula
+
+    def set_rol(self, nuevo_rol):                                   # lo pensamos desde el punto que un empleado puede cambiar su jerarquia dentro de al empresa
+        self.__rol = nuevo_rol
+        print("Rol actualizado a: " + nuevo_rol)
+
+    def set_departamento(self, nuevo_dep):                          # lo mismo que para rol
+        self.__departamento = nuevo_dep
+        print("Departamento actualizado correctamente.")
+
+    def set_telefono(self, nuevo_tel):                              # modificacion de numero de contacto telefonico
+        if nuevo_tel.isdigit() and len(nuevo_tel) >= 8:             # son 8 valores porque lo consideramos sin el 11, o el 15
+            self.__telefono = nuevo_tel                             #deben ser números
+            print("Teléfono actualizado correctamente.")
+        else:
+            print("Número telefónico inválido.")
+
+# hay valores que no necesitan el set como por ejemplo el dni o el nombre, aunque poria cambiar en caso de identidad de genero o modificacion legal
+    
+    def login(self, mail, contraseña):                             # Autenticacion de contraseña, si es primer ingreso, pide cambio de pass
         if mail != self.__mail:
             print("El correo ingresado no pertenece a este usuario.")
             return False
@@ -50,7 +95,7 @@ class Usuario(InterfazCorreo):                   # Representa a un empleado con 
             else:
                 print("Login correcto.")
                 return True
-        else:
+        else:                                                                # Si la pass no es correcta, envia a recuperar
             print("Contraseña incorrecta.")
             opcion = input("¿Desea intentar nuevamente (I) o recuperar contraseña (R)? ").upper()
             if opcion == "I":
@@ -62,22 +107,15 @@ class Usuario(InterfazCorreo):                   # Representa a un empleado con 
                 print("Operación cancelada.")
                 return False
 
-    def cambiar_contraseña(self, nueva):
-        """Permite cambiar la contraseña actual."""
+    def cambiar_contraseña(self, nueva):                                   # Cambio de contraseña
         self.__contraseña = nueva
 
-    def generar_codigo_validacion(self):
-        """Genera un código numérico temporal para recuperación."""
+    def generar_codigo_validacion(self):                                   #genera codigo temporal de recuperación, aleatorio, gracias a random, de 6 digitos, los cuales van a estar entre 000000 y 999999. Envia a mail o tel.
         self.__codigo_validacion = str(random.randint(100000, 999999))
         print("Código enviado al teléfono " + self.__telefono + " o al correo " + self.__mail)
-        print("(Simulación: el código es " + self.__codigo_validacion + ")")  # visible solo para pruebas
-
+        
     def recuperar_contraseña(self):
-        """
-        Simula el proceso de recuperación mediante validación.
-        Envía un código y permite definir una nueva contraseña.
-        """
-        self.generar_codigo_validacion()
+        self.generar_codigo_validacion()                                    # simula validacion
         codigo_ingresado = input("Ingrese el código de validación recibido: ")
         if codigo_ingresado == self.__codigo_validacion:
             nueva = input("Ingrese su nueva contraseña: ")
@@ -90,11 +128,8 @@ class Usuario(InterfazCorreo):                   # Representa a un empleado con 
             print("Código incorrecto. No se pudo recuperar la contraseña.")
             return False
 
-    # ------------------------------------------------------------
-    # MÉTODOS DE CORREO (InterfazCorreo)
-    # ------------------------------------------------------------
-    def get_mail(self):
-        return self.__mail
+    def get_mail(self):                                               # metodo de correo (interfazCorreo)
+        return self.__mail                                            # define métodos heredados
 
     def enviar_mensaje(self, destinatario, asunto, contenido, prioridad=False):
         mensaje = Mensaje(self.__mail, destinatario.get_mail(), asunto, contenido, prioridad)
