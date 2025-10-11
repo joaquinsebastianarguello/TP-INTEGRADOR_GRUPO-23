@@ -1,4 +1,4 @@
-from estructuras import ListaEnlazada
+from Estructuras import ListaEnlazada
 
 class Carpeta:                          # carpeta dentro del cliente de correo. 
                                         # Puede contener mensajes y subcarpetas, formando una estructura recursiva.

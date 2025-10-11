@@ -4,7 +4,7 @@
 # Estas estructuras estan puestas en esqueleto, falta seguir trabajando aún.
 
 
-Class Nodo:                                  # creamos nodo
+class Nodo:                                  # creamos nodo
     def __init__(self, dato):
         self.dato = dato
         self.sig = None
@@ -83,10 +83,10 @@ class Pila:                                   # Creamos pila con metodo LIFO (ul
           else:
             temporal.append(item)             # Lo manda a un temporal hasta que le digamos que hacer con él.
 
-    while len(temporal) > 0:                  # Restaurar los elementos en orden original  
-        self.apilar(temporal.pop())
-
-    return encontrado                         # Devuelve encontrado
+        while len(temporal) > 0:                  # Restaurar los elementos en orden original  
+            self.apilar(temporal.pop())
+    
+        return encontrado                        # Devuelve encontrado
 
 class Cola:                                   # Creamos cola, con método FIFO (Primero entrado, primero salido)
     def __init__(self):

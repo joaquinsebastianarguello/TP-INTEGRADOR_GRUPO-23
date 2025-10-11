@@ -1,6 +1,6 @@
 
-from servidorcorreo import ServidorCorreo
-from usuario import Usuario
+from ServidorCorreo import ServidorCorreo
+from Usuario import Usuario
 
 
 def mostrar_menu():

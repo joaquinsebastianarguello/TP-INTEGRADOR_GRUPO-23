@@ -1,6 +1,6 @@
 
-from usuario import Usuario
-from mensaje import Mensaje
+from Usuario import Usuario
+from Mensajes import Mensaje
 
 class ServidorCorreo:                       # Servidor , administra usuarios, entrada al mail, coordina envios y administra mensajes
     def __init__(self):                     # inicia con lista vacia
@@ -49,7 +49,7 @@ class ServidorCorreo:                       # Servidor , administra usuarios, en
             print("Error en el inicio de sesión.")
             return None
 
-    def enviar_mensaje_global(self, remitente_mail:str, destinatario_mail:str, asunto:str, contenido:str, prioridad=False:bool):
+    def enviar_mensaje_global(self, remitente_mail:str, destinatario_mail:str, asunto:str, contenido:str, prioridad=False):
         remitente = self.buscar_usuario_por_mail(remitente_mail)            # usamos la funcion de busqueda recursiva para enviar mensaje a todos los usuarios.
         destinatario = self.buscar_usuario_por_mail(destinatario_mail)
 

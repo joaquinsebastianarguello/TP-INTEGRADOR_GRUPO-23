@@ -1,10 +1,10 @@
 # CLASE USUARIO (con gestión de contraseñas)
 # Incluye autenticación, cambio obligatorio de contraseña en el primer ingreso, y recuperación mediante código de validación.
 
-from interfaz import InterfazCorreo
-from carpeta import Carpeta
-from mensaje import Mensaje
-from estructuras import Pila
+from Interfaz import InterfazCorreo
+from Carpeta import Carpeta
+from Mensajes import Mensaje
+from Estructuras import Pila
 import random                                    # para crear los codigos de contraseñas aleatorios
 
 class Usuario(InterfazCorreo):                   # Representa a un empleado con cuenta de correo y autenticación.
