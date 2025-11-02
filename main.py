@@ -11,7 +11,9 @@ def mostrar_menu():
     print("3. Listar usuarios (solo administrador)")
     print("4. Enviar mensaje individual")
     print("5. Enviar mensaje a un departamento (solo jefes, gerentes o administradores)")
-    print("6. Salir")
+    print("6. Crear regla de filtro")
+    print("7. Aplicar filtros automáticos")
+    print("9. Salir")
 
 
 def main():                                    # Crea el servidor y permite interactuar con el menú
@@ -29,7 +31,7 @@ def main():                                    # Crea el servidor y permite inte
     usuario_actual = None                      # Guarda al usuario que inicia sesión
     opcion = ""
 
-    while opcion != "6":
+    while opcion != "9":
         mostrar_menu()
         opcion = input("Seleccione una opción: ")
 
@@ -96,11 +98,38 @@ def main():                                    # Crea el servidor y permite inte
             servidor.enviar_a_departamento(usuario_actual.get_mail(), departamento, asunto, contenido)
 
         elif opcion == "6":
-            print("El correo se esta cerrando...")
+            if usuario_actual == None:
+                print("Debe iniciar sesión para crear filtros.")
+                return
 
+            print("Nueva regla creada:")
+            tipo = input("Filtrar por asunto/remitente: ").lower()
+            valor = input("Ingrese palabra clave a buscar: ")
+            carpeta = input("Nombre de la carpeta destino: ")
+
+            usuario_actual.regla_filtro(tipo, valor, carpeta)
+
+        elif opcion == "7":
+            if usuario_actual == None:
+                print("Debe iniciar sesión para aplicar filtros.")
+                return
+
+            print("Filtros aplicados.")
+            usuario_actual.aplicar_filtros()
+        
+        elif opcion == "8":  # Nueva opción
+            if usuario_actual is None:
+                print("Debe iniciar sesión para enviar mensajes.")
+                return
+            destinatario = input("Correo del destinatario: ")
+            asunto = input("Asunto: ")
+            contenido = input("Contenido: ")
+            servidor.enviar_mensaje_prioridad(usuario_actual.get_mail(), destinatario, asunto, contenido)
+
+        elif opcion == "9":
+            print("El correo se esta cerrando...")
+        
         else:
             print("Opción no válida. Intente nuevamente.")
-
-
 
 main()                    # EJECUCIÓN DIRECTA DEL PROGRAMA
