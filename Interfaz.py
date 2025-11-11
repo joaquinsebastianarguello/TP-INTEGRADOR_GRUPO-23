@@ -13,3 +13,15 @@ class InterfazCorreo(ABC):    # Acá definimos la interfaz de correo  de forma a
     @abstractmethod
     def listar_mensaje(self):
         pass
+
+    @abstractmethod
+    def agregar_regla_filtro(self, tipo, palabra_clave, carpeta_destino):     #Agrega filtro: tipo(asunto o remitente), palabra_clave (omite mayúscula y busca coincidencia por palabra y no por frase textual)
+        pass
+
+    @abstractmethod
+    def aplicar_filtros(self):
+        pass
+
+    @abstractmethod
+    def procesar_mensajes_prioritarios(self):         # esto habilita otros metodos que van a estar definidos mas adelante como moverlos, mostrarlos, ordenarlos, ejecutarlos, vaciar colas despues de procesarlos 
+        pass
