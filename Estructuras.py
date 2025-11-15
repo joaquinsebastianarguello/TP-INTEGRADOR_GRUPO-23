@@ -1,106 +1,228 @@
-# Pensamos utilizar las listas enlazadas para almacenar mensajes dentro de cada carpeta
-# De la misma manera utilizamos Pila nos serviria como comportamiento para la papelera, estamos en dudas si tambien para deshacer borrados de la papelera
-# La cola nos sirve para ServidorCorreo como un sistema de orden de procesamiento de mensajes ingresados, mediante FIFO(Primero entrado, Primero salido)
-# Estas estructuras estan puestas en esqueleto, falta seguir trabajando aún.
+
+# LISTA
+
+class nodoLista(object):
+    info, sig = None, None
 
 
-class Nodo:                                  # creamos nodo
-    def __init__(self, dato):
-        self.dato = dato
-        self.sig = None
-
-class ListaEnlazada:                          # creamos lista enlazada para evr emnsajes dentro de las carpetas, inicia en vacio
+class lista(object):
     def __init__(self):
         self.inicio = None
+        self.tamanio = 0
 
-    def insertar(self, dato):                 # inserta elemento en la lista
-        nuevo = Nodo(dato)
-        nuevo.sig = self.inicio
-        self.inicio = nuevo
 
-    def recorrer(self):                       # muestar lista en pantalla. inciiando con guion y espacio
-        actual = self.inicio
-        while actual is not None:
-            print("- " + str(actual.dato))
-            actual = actual.sig
+def insertar(lista, dato):
+    nodo = nodoLista()
+    nodo.info = dato
 
-    def obtener_todos(self):                  # esta es similar a la anterior pero nos permite trabajar en consecuencia, por ejemplo recorrer la lsiat de mensaje para agregar, o eliminar, la anterior termian su trabajo al listarlos e imprimirlos, esta eprmite seguir trabajando a partir de recorrer la lista
-        elementos = []
-        actual = self.inicio
-        while actual is not None:
-            elementos.append(actual.dato)
-            actual = actual.sig
-        return elementos
+    if (lista.inicio is None) or (lista.inicio.info > dato):
+        nodo.sig = lista.inicio
+        lista.inicio = nodo
+    else:
+        anterior = lista.inicio
+        actual = lista.inicio.sig
 
-    def eliminar(self, dato):                 #Elimina el primer nodo cuyo dato coincida con el valor recibido. Si no encuentra el elemento, no realiza cambios.  
-        actual = self.inicio
-        anterior = None
- 
-        if actual is None:                    # Si la lista esta vacia arroja Falso, no elimina
-            return False
-
-        if actual.dato == dato:               # Si el nodo a eliminar es el primero, compara ese elemento, elimina yal finalizar devuelve true
-            self.inicio = actual.sig
-            return True
- 
-        while actual is not None:             # Si el nodo está más adelante, busca en forma recursiva con el while, hasta encontrarlo, lo elimina y convierte el posterior en siguiente del anterior.
-            if actual.dato == dato:
-                anterior.sig = actual.sig
-                return True
+        while (actual is not None) and (actual.info < dato):
             anterior = actual
             actual = actual.sig
 
-        return False                          # Si al recorrer toda la lista no se encontró el elemento, arroja falso
- 
-class Pila:                                   # Creamos pila con metodo LIFO (ultimo entrado, Primero salido)
+        nodo.sig = actual
+        anterior.sig = nodo
+
+    lista.tamanio += 1
+
+
+def buscar(lista, clave):
+    actual = lista.inicio
+    while actual is not None:
+        if actual.info == clave:
+            return actual
+        actual = actual.sig
+    return None
+
+
+def buscar_todos(lista, clave):
+    elementos = []
+    actual = lista.inicio
+
+    while actual is not None:
+        if actual.info == clave:
+            elementos.append(actual.info)
+        actual = actual.sig
+    return elementos
+
+
+def eliminar(lista, clave):
+    actual = lista.inicio
+    anterior = None
+
+    while actual is not None:
+        if actual.info == clave:
+            if anterior is None:
+                lista.inicio = actual.sig
+            else:
+                anterior.sig = actual.sig
+            lista.tamanio -= 1
+            return True
+        anterior = actual
+        actual = actual.sig
+
+    return False
+
+
+def obtener_todos(lista):
+    elementos = []
+    actual = lista.inicio
+    while actual is not None:
+        elementos.append(actual.info)
+        actual = actual.sig
+    return elementos
+
+
+
+# PILA 
+
+class nodoPila(object):
+    info, sig = None, None
+
+
+class pila(object):
     def __init__(self):
-        self.items = []
+        self.cima = None
+        self.tamanio = 0
 
-    def apilar(self, elemento):               # Agrega elemento en al parte de arriba de la pila
-        self.items.append(elemento)
 
-    def desapilar(self):                      # Si como en el topo esta la ultima apilada y el método es LIFO, elimina la de arriba de todo, dejando como tope ahora a la que antes estaba segunda contando desde arriba hacia abajo
-        if not self.esta_vacia():             # Si esta vacia la pila devielve None.
-            return self.items.pop()
+def apilar(pila, dato):
+    nuevo = nodoPila()
+    nuevo.info = dato
+    nuevo.sig = pila.cima
+    pila.cima = nuevo
+    pila.tamanio += 1
+
+
+def desapilar(pila):
+    if pila.cima is None:
         return None
+    dato = pila.cima.info
+    pila.cima = pila.cima.sig
+    pila.tamanio -= 1
+    return dato
 
-    def esta_vacia(self):                     # Estará vacia, si sus elementos son nulos
-        return len(self.items) == 0
 
-    def buscar(self, elemento):               # Busca un elemento dentro de la fila, lo pensamos desde el punto de busqueda de un mensaje en papelera, su existencia o no.
-        for i, item in enumerate(self.items): # Arroja la posición si se encontrara, de lo contrario None
-           if item == elemento:
-              return i
-        return None
+def pila_vacia(pila):
+    return pila.cima is None
 
-    def extraer(self, elemento):              # Elimina un elemento específico de la pila, sin alterar el orden de los demás.
-        temporal = []                         # Devuelve el elemento si se encontró y eliminó, o None si no existe.
-        encontrado = None
-        while not self.esta_vacia():          # Desapilar hasta encontrar el elemento
-          item = self.desapilar()
-          if item == elemento and encontrado is None:
-            encontrado = item                 # Si es encontrado, no lo volvemos a apilar
-          else:
-            temporal.append(item)             # Lo manda a un temporal hasta que le digamos que hacer con él.
 
-        while len(temporal) > 0:                  # Restaurar los elementos en orden original  
-            self.apilar(temporal.pop())
-    
-        return encontrado                        # Devuelve encontrado
+def pila_buscar(pila, elemento):
+    actual = pila.cima
+    posicion = 0
+    while actual is not None:
+        if actual.info == elemento:
+            return posicion
+        actual = actual.sig
+        posicion += 1
+    return None
 
-class Cola:                                   # Creamos cola, con método FIFO (Primero entrado, primero salido)
+
+def pila_extraer(pila, elemento):
+    temporal = []
+    encontrado = None
+
+    while not pila_vacia(pila):
+        item = desapilar(pila)
+        if item == elemento and encontrado is None:
+            encontrado = item
+        else:
+            temporal.append(item)
+
+    while len(temporal) > 0:
+        apilar(pila, temporal.pop())
+
+    return encontrado
+
+
+
+# COLA 
+
+class nodoCola(object):
+    info, sig = None, None
+
+
+class cola(object):
     def __init__(self):
-        self.items = []
+        self.frente = None
+        self.final = None
+        self.tamanio = 0
 
-    def encolar(self, elemento):              #agrega elemento al final de la cola
-        self.items.append(elemento)
 
-    def desencolar(self):                     # saca elemento ultimo de la cola, muestra la anterior
-        if not self.esta_vacia():
-            return self.items.pop(0)
+def encolar(cola, dato):
+    nuevo = nodoCola()
+    nuevo.info = dato
+
+    if cola.frente is None:
+        cola.frente = nuevo
+    else:
+        cola.final.sig = nuevo
+
+    cola.final = nuevo
+    cola.tamanio += 1
+
+
+def desencolar(cola):
+    if cola.frente is None:
         return None
 
-    def esta_vacia(self):                     # estará vacia si sus elementos son nulos
-        return len(self.items) == 0           # como la cola organiza las prioridades del Servidor, decidimos no implementar encontrar como sí lo hicimos en pila
+    dato = cola.frente.info
+    cola.frente = cola.frente.sig
+
+    if cola.frente is None:
+        cola.final = None
+
+    cola.tamanio -= 1
+    return dato
 
 
+def cola_vacia(cola):
+    return cola.frente is None
+
+
+
+# ARBOL GENERAL 
+
+class nodoArbol(object):
+    info, hijo, hermano = None, None, None
+
+
+class arbol(object):
+    def __init__(self, nombre_raiz):
+        self.raiz = nodoArbol()
+        self.raiz.info = nombre_raiz
+
+
+def agregar_hijo(padre, nombre):
+    nuevo = nodoArbol()
+    nuevo.info = nombre
+    nuevo.hermano = padre.hijo
+    padre.hijo = nuevo
+    return nuevo
+
+
+def buscar_arbol(nodo, nombre):
+    if nodo is None:
+        return None
+
+    if nodo.info == nombre:
+        return nodo
+
+    resultado = buscar_arbol(nodo.hijo, nombre)
+    if resultado is not None:
+        return resultado
+
+    return buscar_arbol(nodo.hermano, nombre)
+
+
+def mostrar_arbol(nodo, nivel=0):
+    if nodo is not None:
+        print("  " * nivel + "- " + str(nodo.info))
+        mostrar_arbol(nodo.hijo, nivel + 1)
+        mostrar_arbol(nodo.hermano, nivel)
