@@ -1,5 +1,5 @@
 
-from estructuras import ListaEnlazada, Pila
+from Estructuras import ListaEnlazada, Pila
 
 class Carpeta:
 
@@ -9,7 +9,9 @@ class Carpeta:
         self.__subcarpetas = []
         self.__pila_auxiliar = Pila()
 
-    # GETTERS
+    #          GETTERS
+  
+
     def get_nombre(self):
         return self.__nombre
 
@@ -22,14 +24,20 @@ class Carpeta:
     def get_tamaño(self):
         return self.__mensajes.tamaño
 
-    # SETTERS
+   
+    #          SETTERS
+   
+
     def set_nombre(self, nuevo_nombre):
         self.__nombre = nuevo_nombre
 
-    # METODOS
+    
+    #          MÉTODOS
+   
+
     def agregar_mensaje(self, mensaje):
         self.__mensajes.insertar(mensaje)
-        
+
     def eliminar_mensaje(self, mensaje):
         eliminado = self.__mensajes.eliminar(mensaje)
         if eliminado:
@@ -50,9 +58,11 @@ class Carpeta:
         for sub in self.__subcarpetas:
             if sub.get_nombre() == nombre:
                 return sub
+            
             resultado = sub.buscar_subcarpeta(nombre)
             if resultado is not None:
                 return resultado
+
         return None
 
     def listar_contenido(self, nivel=0):
@@ -86,3 +96,5 @@ class Carpeta:
     def vaciar_carpeta(self):
         self.__mensajes = ListaEnlazada()
         self.__pila_auxiliar = Pila()
+
+
