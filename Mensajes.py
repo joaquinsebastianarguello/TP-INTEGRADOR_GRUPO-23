@@ -1,10 +1,10 @@
 
-
 import datetime
 
-class Mensaje:
+class Mensaje(object):
 
     def __init__(self, remitente, destinatario, asunto, contenido, prioridad=False):
+
         self.__remitente = remitente
 
         if isinstance(destinatario, list):
@@ -19,7 +19,10 @@ class Mensaje:
         self.__adjuntos = []
         self.__fecha = datetime.datetime.now()
 
-    # GETTERS
+   
+    #        GETTERS
+   
+
     def get_remitente(self):
         return self.__remitente
 
@@ -44,14 +47,20 @@ class Mensaje:
     def get_fecha(self):
         return self.__fecha
 
-    # SETTERS
+   
+    #        SETTERS
+   
+
     def set_prioridad(self, valor):
         self.__prioridad = valor
 
     def set_destacado(self, valor):
         self.__destacado = valor
 
-    # METODOS
+   
+    #        METODOS
+   
+
     def es_prioritario(self):
         return self.__prioridad
 
@@ -74,11 +83,11 @@ class Mensaje:
         texto += "Asunto: " + self.__asunto + "\n"
         texto += "Fecha: " + str(self.__fecha) + "\n"
         texto += "Prioridad: " + prioridad_txt + "\n"
-        texto += "Destacado: " + destacado_txt + "\n"
-        texto += "\n" + self.__contenido + "\n"
+        texto += "Destacado: " + destacado_txt + "\n\n"
+        texto += self.__contenido + "\n"
 
         if len(self.__adjuntos) > 0:
-            texto += "Adjuntos:\n"
+            texto += "\nAdjuntos:\n"
             for adj in self.__adjuntos:
                 texto += "- " + adj["tipo"] + ": " + adj["nombre"] + " (" + adj["ruta"] + ")\n"
 
