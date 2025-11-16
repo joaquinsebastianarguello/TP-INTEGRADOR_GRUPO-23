@@ -2,13 +2,13 @@
 from Interfaz import InterfazCorreo
 from Carpeta import Carpeta
 from Mensajes import Mensaje
-from Estructuras import Pila
+from Estructuras import Pila, ColaPrioridad
 
 
 class Usuario(InterfazCorreo):
 
     def __init__(self, nombre, dni, mail, celular, departamento, rol, respuesta_seguridad):
-        # DATOS PRIVADOS
+        # DATOS PERSONALES
         self.__nombre = nombre
         self.__dni = dni
         self.__mail = mail
@@ -16,11 +16,9 @@ class Usuario(InterfazCorreo):
         self.__departamento = departamento
         self.__rol = rol
 
-        # CONTRASEÑA INICIAL
+        # SEGURIDAD Y CONTRASEÑA
         self.__password = "1234"
         self.__primer_login = True
-
-        # PREGUNTA Y RESPUESTA DE SEGURIDAD
         self.__pregunta_seguridad = "Nombre de tu profesor favorito"
         self.__respuesta_seguridad = respuesta_seguridad.lower()
 
@@ -32,10 +30,20 @@ class Usuario(InterfazCorreo):
         self.__root.agregar_subcarpeta(self.__inbox)
         self.__root.agregar_subcarpeta(self.__enviados)
 
-        # PAPELERA (PILA)
+        # PAPELERA
         self.__papelera = Pila()
+
+        # FILTROS (Entrega 3)
+        # reglas = { "palabra" : Carpeta }
+        self.__reglas_filtro = {}
+
+        # PRIORIDAD (cola de prioridad)
+        self.__cola_prioridad = ColaPrioridad()
+
+
     
-    # GETTERS
+    #          GETTERS
+   
 
     def get_nombre(self):
         return self.__nombre
@@ -64,25 +72,20 @@ class Usuario(InterfazCorreo):
     def get_root(self):
         return self.__root
 
-    # SETTERS
+
+    #          SETTERS
 
     def set_mail(self, nuevo_mail):
         if "@" in nuevo_mail and "." in nuevo_mail:
             self.__mail = nuevo_mail
-        else:
-            print("Formato de correo inválido.")
 
     def set_password(self, nueva_pass):
         if len(nueva_pass) >= 4:
             self.__password = nueva_pass
-        else:
-            print("La contraseña debe tener al menos 4 caracteres.")
 
     def set_celular(self, nuevo_cel):
         if nuevo_cel.isdigit() and len(nuevo_cel) == 10:
             self.__celular = nuevo_cel
-        else:
-            print("Número de celular inválido. Debe tener 10 digitos, solo números, sin el 0 y el 15 del codigo de área")
 
     def set_departamento(self, nuevo_dep):
         self.__departamento = nuevo_dep
@@ -90,10 +93,13 @@ class Usuario(InterfazCorreo):
     def set_rol(self, nuevo_rol):
         self.__rol = nuevo_rol
 
-    # AUTENTICACIÓN
 
-    def verificar_password(self, password_ingresada):
-        return password_ingresada == self.__password
+   
+    #        AUTENTICACIÓN
+    
+
+    def verificar_password(self, pass_ingresada):
+        return pass_ingresada == self.__password
 
     def es_primer_login(self):
         return self.__primer_login
@@ -101,12 +107,16 @@ class Usuario(InterfazCorreo):
     def confirmar_primer_login(self):
         self.__primer_login = False
 
-    # RECUPERACIÓN DE CONTRASEÑA
-
+   
+    #   RECUPERACIÓN DE PASSWORD
+    
     def verificar_respuesta_seguridad(self, respuesta):
         return respuesta.lower() == self.__respuesta_seguridad
 
-    # MÉTODOS DE MENSAJERÍA (INTERFAZ)
+
+   
+    #  MÉTODOS DE MENSAJERÍA
+    
 
     def enviar_mensaje(self, destinatario, asunto, contenido, prioridad=False):
         mensaje = Mensaje(self.__mail, destinatario.get_mail(), asunto, contenido, prioridad)
@@ -114,12 +124,22 @@ class Usuario(InterfazCorreo):
         destinatario.recibir_mensaje(mensaje)
 
     def recibir_mensaje(self, mensaje):
+        # Si el mensaje es urgente → va a la cola de prioridad
+        if mensaje.get_prioridad():
+            self.__cola_prioridad.encolar(mensaje)
+
+        # Aplicar filtros si coinciden
+        self.aplicar_filtros(mensaje)
+
+        # Siempre cae en inbox si no hay filtro específico
         self.__inbox.agregar_mensaje(mensaje)
 
     def listar_mensaje(self):
         self.__root.listar_contenido()
 
-    # GESTIÓN DE MENSAJES
+
+    #   GESTIÓN DE MENSAJES
+   
 
     def eliminar_mensaje(self, mensaje):
         self.__papelera.apilar(mensaje)
@@ -128,3 +148,28 @@ class Usuario(InterfazCorreo):
         if not self.__papelera.esta_vacia():
             return self.__papelera.desapilar()
         return None
+
+
+    
+    #        FILTROS (Entrega 3)
+   
+
+    def agregar_regla_filtro(self, palabra, carpeta_destino):
+        self.__reglas_filtro[palabra.lower()] = carpeta_destino
+
+    def aplicar_filtros(self, mensaje):
+        asunto = mensaje.get_asunto().lower()
+
+        for palabra, carpeta_destino in self.__reglas_filtro.items():
+            if palabra in asunto:
+                carpeta_destino.agregar_mensaje(mensaje)
+                return True
+
+        return False
+
+    #  MENSAJES PRIORITARIOS
+
+    def procesar_mensajes_prioritarios(self):
+        if self.__cola_prioridad.esta_vacia():
+            return None
+        return self.__cola_prioridad.desencolar()
