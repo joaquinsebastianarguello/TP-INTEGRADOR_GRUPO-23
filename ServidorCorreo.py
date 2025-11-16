@@ -144,7 +144,7 @@ class ServidorCorreo:
             print("No existe ruta entre los servidores.")
             return
 
-        print("Ruta encontrada: " + " -> ".join(s.get_nombre() for s in ruta))
+        print("Ruta encontrada: " + " , ".join(s.get_nombre() for s in ruta))
 
         destino_usuario = destino.buscar_usuario_por_mail(destinatario_mail)
         mensaje = Mensaje(remitente_mail, destinatario_mail, asunto, contenido, prioridad)
