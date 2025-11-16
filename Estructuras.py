@@ -1,5 +1,7 @@
 
-# LISTA
+
+#   LISTA ENLAZADA SIMPLE
+
 
 class nodoLista(object):
     info, sig = None, None
@@ -8,221 +10,146 @@ class nodoLista(object):
 class lista(object):
     def __init__(self):
         self.inicio = None
-        self.tamanio = 0
+        self.tamaño = 0
 
+    def insertar(self, dato):
+        nuevo_nodo = nodoLista()
+        nuevo_nodo.info = dato
 
-def insertar(lista, dato):
-    nodo = nodoLista()
-    nodo.info = dato
+        if (self.inicio is None):
+            nuevo_nodo.sig = self.inicio
+            self.inicio = nuevo_nodo
 
-    if (lista.inicio is None) or (lista.inicio.info > dato):
-        nodo.sig = lista.inicio
-        lista.inicio = nodo
-    else:
-        anterior = lista.inicio
-        actual = lista.inicio.sig
+        else:
+            nuevo_nodo.sig = self.inicio
+            self.inicio = nuevo_nodo
 
-        while (actual is not None) and (actual.info < dato):
-            anterior = actual
+        self.tamaño += 1
+
+    def recorrer(self):
+        actual = self.inicio
+        while actual is not None:
+            print("- " + str(actual.info))
             actual = actual.sig
 
-        nodo.sig = actual
-        anterior.sig = nodo
-
-    lista.tamanio += 1
-
-
-def buscar(lista, clave):
-    actual = lista.inicio
-    while actual is not None:
-        if actual.info == clave:
-            return actual
-        actual = actual.sig
-    return None
-
-
-def buscar_todos(lista, clave):
-    elementos = []
-    actual = lista.inicio
-
-    while actual is not None:
-        if actual.info == clave:
+    def obtener_todos(self):
+        elementos = []
+        actual = self.inicio
+        while actual is not None:
             elementos.append(actual.info)
-        actual = actual.sig
-    return elementos
+            actual = actual.sig
+        return elementos
+
+    def buscar(self, dato):
+        actual = self.inicio
+        while actual is not None:
+            if actual.info == dato:
+                return actual
+            actual = actual.sig
+        return None
+
+    def eliminar(self, dato):
+        actual = self.inicio
+        anterior = None
+
+        while actual is not None:
+            if actual.info == dato:
+                if anterior is None:
+                    self.inicio = actual.sig
+                else:
+                    anterior.sig = actual.sig
+                self.tamaño -= 1
+                return True
+            anterior = actual
+            actual = actual.sig
+        return False
 
 
-def eliminar(lista, clave):
-    actual = lista.inicio
-    anterior = None
 
-    while actual is not None:
-        if actual.info == clave:
-            if anterior is None:
-                lista.inicio = actual.sig
+#   PILA (LIFO)
+
+
+class Pila(object):
+    def __init__(self):
+        self.items = []
+
+    def apilar(self, elemento):
+        self.items.append(elemento)
+
+    def desapilar(self):
+        if not self.esta_vacia():
+            return self.items.pop()
+        return None
+
+    def esta_vacia(self):
+        return len(self.items) == 0
+
+    def buscar(self, elemento):
+        for i, item in enumerate(self.items):
+            if item == elemento:
+                return i
+        return None
+
+    def extraer(self, elemento):
+        temporal = []
+        encontrado = None
+
+        while not self.esta_vacia():
+            item = self.desapilar()
+            if item == elemento and encontrado is None:
+                encontrado = item
             else:
-                anterior.sig = actual.sig
-            lista.tamanio -= 1
-            return True
-        anterior = actual
-        actual = actual.sig
+                temporal.append(item)
 
-    return False
+        while len(temporal) > 0:
+            self.apilar(temporal.pop())
 
-
-def obtener_todos(lista):
-    elementos = []
-    actual = lista.inicio
-    while actual is not None:
-        elementos.append(actual.info)
-        actual = actual.sig
-    return elementos
+        return encontrado
 
 
 
-# PILA 
-
-class nodoPila(object):
-    info, sig = None, None
+#   COLA (FIFO)
 
 
-class pila(object):
+class Cola(object):
     def __init__(self):
-        self.cima = None
-        self.tamanio = 0
+        self.items = []
 
+    def encolar(self, elemento):
+        self.items.append(elemento)
 
-def apilar(pila, dato):
-    nuevo = nodoPila()
-    nuevo.info = dato
-    nuevo.sig = pila.cima
-    pila.cima = nuevo
-    pila.tamanio += 1
-
-
-def desapilar(pila):
-    if pila.cima is None:
-        return None
-    dato = pila.cima.info
-    pila.cima = pila.cima.sig
-    pila.tamanio -= 1
-    return dato
-
-
-def pila_vacia(pila):
-    return pila.cima is None
-
-
-def pila_buscar(pila, elemento):
-    actual = pila.cima
-    posicion = 0
-    while actual is not None:
-        if actual.info == elemento:
-            return posicion
-        actual = actual.sig
-        posicion += 1
-    return None
-
-
-def pila_extraer(pila, elemento):
-    temporal = []
-    encontrado = None
-
-    while not pila_vacia(pila):
-        item = desapilar(pila)
-        if item == elemento and encontrado is None:
-            encontrado = item
-        else:
-            temporal.append(item)
-
-    while len(temporal) > 0:
-        apilar(pila, temporal.pop())
-
-    return encontrado
-
-
-
-# COLA 
-
-class nodoCola(object):
-    info, sig = None, None
-
-
-class cola(object):
-    def __init__(self):
-        self.frente = None
-        self.final = None
-        self.tamanio = 0
-
-
-def encolar(cola, dato):
-    nuevo = nodoCola()
-    nuevo.info = dato
-
-    if cola.frente is None:
-        cola.frente = nuevo
-    else:
-        cola.final.sig = nuevo
-
-    cola.final = nuevo
-    cola.tamanio += 1
-
-
-def desencolar(cola):
-    if cola.frente is None:
+    def desencolar(self):
+        if not self.esta_vacia():
+            return self.items.pop(0)
         return None
 
-    dato = cola.frente.info
-    cola.frente = cola.frente.sig
-
-    if cola.frente is None:
-        cola.final = None
-
-    cola.tamanio -= 1
-    return dato
-
-
-def cola_vacia(cola):
-    return cola.frente is None
+    def esta_vacia(self):
+        return len(self.items) == 0
 
 
 
-# ARBOL GENERAL 
+#   ÁRBOL GENERAL (RECURSIVO)
+
 
 class nodoArbol(object):
-    info, hijo, hermano = None, None, None
+    def __init__(self, info):
+        self.info = info
+        self.hijos = []        # lista de subárboles
 
+    def agregar_hijo(self, hijo):
+        self.hijos.append(hijo)
 
-class arbol(object):
-    def __init__(self, nombre_raiz):
-        self.raiz = nodoArbol()
-        self.raiz.info = nombre_raiz
+    def recorrer(self, nivel=0):
+        sangria = "  " * nivel
+        print(sangria + str(self.info))
+        for hijo in self.hijos:
+            hijo.recorrer(nivel + 1)
 
-
-def agregar_hijo(padre, nombre):
-    nuevo = nodoArbol()
-    nuevo.info = nombre
-    nuevo.hermano = padre.hijo
-    padre.hijo = nuevo
-    return nuevo
-
-
-def buscar_arbol(nodo, nombre):
-    if nodo is None:
+    def buscar(self, dato):
+        if self.info == dato:
+            return self
+        for hijo in self.hijos:
+            resultado = hijo.buscar(dato)
+            if resultado is not None:
+                return resultado
         return None
-
-    if nodo.info == nombre:
-        return nodo
-
-    resultado = buscar_arbol(nodo.hijo, nombre)
-    if resultado is not None:
-        return resultado
-
-    return buscar_arbol(nodo.hermano, nombre)
-
-
-def mostrar_arbol(nodo, nivel=0):
-    if nodo is not None:
-        print("  " * nivel + "- " + str(nodo.info))
-        mostrar_arbol(nodo.hijo, nivel + 1)
-        mostrar_arbol(nodo.hermano, nivel)
