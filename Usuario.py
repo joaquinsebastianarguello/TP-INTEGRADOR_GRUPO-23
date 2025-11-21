@@ -1,7 +1,7 @@
 
 from Interfaz import InterfazCorreo
 from Carpeta import Carpeta
-from Mensajes import Mensaje
+from Mensaje import Mensaje
 from Estructuras import Pila, ColaPrioridad
 
 
@@ -154,18 +154,30 @@ class Usuario(InterfazCorreo):
     #        FILTROS (Entrega 3)
    
 
-    def agregar_regla_filtro(self, palabra, carpeta_destino):
-        self.__reglas_filtro[palabra.lower()] = carpeta_destino
+    def agregar_regla_filtro(self, tipo, palabra, carpeta_destino):
+        palabra = palabra.lower()
 
-    def aplicar_filtros(self, mensaje):
+        destino = self.__root.buscar_subcarpeta(carpeta_destino)
+        if destino is None:
+            destino = Carpeta(carpeta_destino)
+            self.__root.agregar_subcarpeta(destino)
+
+        self.__reglas_filtro[palabra] = destino
+        print("Regla creada: los mensajes que contengan '" + palabra +"'irán a la carpeta '" + carpeta_destino + "'.")
+   
+    def aplicar_filtros(self, mensaje=None):
+        if mensaje is None:
+            mensajes = self.__inbox.get_mensajes().obtener_todos()
+            for m in mensajes:
+                self.aplicar_filtros(m)
+            return
+
         asunto = mensaje.get_asunto().lower()
 
         for palabra, carpeta_destino in self.__reglas_filtro.items():
             if palabra in asunto:
                 carpeta_destino.agregar_mensaje(mensaje)
                 return True
-
-        return False
 
     #  MENSAJES PRIORITARIOS
 

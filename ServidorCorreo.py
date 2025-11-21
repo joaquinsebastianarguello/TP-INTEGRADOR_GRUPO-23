@@ -1,6 +1,6 @@
 
 from Usuario import Usuario
-from Mensajes import Mensaje
+from Mensaje import Mensaje
 from collections import deque
 
 

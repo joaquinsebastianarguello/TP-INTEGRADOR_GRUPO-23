@@ -7,7 +7,7 @@ class nodoLista(object):
     info, sig = None, None
 
 
-class lista(object):
+class ListaEnlazada(object):
     def __init__(self):
         self.inicio = None
         self.tamaño = 0
@@ -126,6 +126,14 @@ class Cola(object):
     def esta_vacia(self):
         return len(self.items) == 0
 
+class ColaPrioridad(Cola):
+    def encolar(self, elemento):
+        self.items.append(elemento)
+
+    def desencolar(self):
+        if not self.esta_vacia():
+            return self.items.pop(0)
+        return None
 
 
 #   ÁRBOL GENERAL (RECURSIVO)

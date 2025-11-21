@@ -119,7 +119,7 @@ def main():
                 print("Iniciar sesión.")
                 continue
 
-            servidor.procesar_mensajes_prioritarios()
+            usuario_actual.procesar_mensajes_prioritarios()
 
         # 9) Salir
         elif opcion == "9":
