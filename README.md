@@ -16,4 +16,10 @@ Universidad: U.N.A.B.
 AñO: 2025
 
 Drive de documentación: 
-https://docs.google.com/document/d/13a3gVvZwPs3GbvHjfCNMg4y--LmJpwPtMolgjfH-CRI/edit?usp=sharing 
+https://docs.google.com/document/d/13a3gVvZwPs3GbvHjfCNMg4y--LmJpwPtMolg
+
+Video presentación para exposición oral: 
+https://es.scribd.com/document/953138174/Presentacion-Entrega-Final 
+
+Documentación final del proyecto:
+https://es.scribd.com/document/953142083/Documentacion-Final-trabajo-Integrador-de-Estructura-de-Datos
